@@ -34,6 +34,10 @@ def apply_matrix_transformations(img, matrix):
 img = cv2.imread("test.jpeg")
 assert img is not None, "File could not be read"
 
+# move the image 
+move_matrix = np.float32([[1, 0, 50], [0, 1, 100]])
 
+moved_img = apply_matrix_transformations(img, move_matrix)
+show_images(img, moved_img, "Move Image")
 
 plt.show()
