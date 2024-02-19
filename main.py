@@ -167,6 +167,30 @@ img_sinusoidal = cv2.remap(img, u.astype(np.float32), v.astype(np.float32), cv2.
 
 show_images(img, img_sinusoidal, "Sinusoidal Transformation")
 
+# # distortion correction TODO DONT WORK
+# xi, yi = np.meshgrid(np.arange(img.shape[1]), np.arange(img.shape[0]))
+
+# xmid, ymid = img.shape[1] / 2.0, img.shape[0] / 2.0
+# xi = xi - xmid
+# yi = yi - ymid
+
+# # convert to polar coordinates
+# r, theta = cv2.cartToPolar(xi / xmid, yi / ymid)
+
+# F3 = 0.001
+# F5 = 0.002
+
+# r = r + F3 * r ** 3 + F5 * r ** 5
+
+# # convert back to cartesian coordinates
+# xi, yi = cv2.polarToCart(r, theta)
+
+# u, v = u * xmid + xmid, v * ymid + ymid
+
+# # remap the image
+# img_distortion_corrected = cv2.remap(img, u.astype(np.float32), v.astype(np.float32), cv2.INTER_LINEAR)
+
+# show_images(img, img_distortion_corrected, "Distortion Correction")
 
 # merging images
 
