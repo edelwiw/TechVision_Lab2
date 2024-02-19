@@ -159,5 +159,13 @@ else:
 
 show_images(img, polynomial_img, "Polynomial Transformation")
 
+# sinusoidal transformation
+u, v = np.meshgrid(np.arange(img.shape[1]), np.arange(img.shape[0]))
+v = v + 15 * np.sin(2 * np.pi * u / 90)
+
+img_sinusoidal = cv2.remap(img, u.astype(np.float32), v.astype(np.float32), cv2.INTER_LINEAR)
+
+show_images(img, img_sinusoidal, "Sinusoidal Transformation")
+
 
 plt.show()
