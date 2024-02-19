@@ -34,6 +34,13 @@ def apply_matrix_transformations(img, matrix, shape=(0, 0)):
         shape = (img.shape[1], img.shape[0])
     return cv2.warpAffine(img, matrix, shape)
 
+
+def apply_perspective_transformations(img, matrix, shape=(0, 0)):
+    # apply the matrix to the image
+    if shape == (0, 0):
+        shape = (img.shape[1], img.shape[0])
+    return cv2.warpPerspective(img, matrix, shape)
+
 # open the image
 img = cv2.imread("test.jpeg")
 assert img is not None, "File could not be read"
@@ -119,6 +126,14 @@ piecewise_linear_img = img.copy()
 piecewise_linear_img[:, img.shape[1] // 2:] = apply_matrix_transformations(img[:, img.shape[1] // 2:], piecewise_linear_matrix)
 
 show_images(img, piecewise_linear_img, "Piecewise Linear Transformation")
+
+### non-linear transformations
+
+# projective transformation
+projective_matrix = np.float32([[1.1, 0.35, 0], [0.2, 1.1, 0], [0.00075, 0.0005, 1]])
+
+projective_img = apply_perspective_transformations(img, projective_matrix)
+show_images(img, projective_img, "Projective Transformation")
 
 
 plt.show()
