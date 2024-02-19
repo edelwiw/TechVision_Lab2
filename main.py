@@ -111,4 +111,14 @@ shearing_matrix = np.float32([[1, 0, 0], [0.2, 1, 0]])
 sheared_img = apply_matrix_transformations(img, shearing_matrix)
 show_images(img, sheared_img, "Shearing Transformation")
 
+# picewise linear transformation
+stratch = 4
+piecewise_linear_matrix = np.float32([[stratch, 0, 0], [0, 1, 0]])
+
+piecewise_linear_img = img.copy()
+piecewise_linear_img[:, img.shape[1] // 2:] = apply_matrix_transformations(img[:, img.shape[1] // 2:], piecewise_linear_matrix)
+
+show_images(img, piecewise_linear_img, "Piecewise Linear Transformation")
+
+
 plt.show()
