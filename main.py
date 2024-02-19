@@ -67,4 +67,32 @@ zoomed_img_cv = cv2.resize(img, None, fx=1.5, fy=1.5, interpolation=cv2.INTER_CU
 # None is the size of the output image (None ti use scaling factors), fx and fy are the scale factors
 show_images(img, zoomed_img_cv, "Zoom Image (using OpenCV)")
 
+# rotate the image
+angle = np.deg2rad(10)
+rotation_matrix = np.float32([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0]])
+
+rotated_img = apply_matrix_transformations(img, rotation_matrix)
+show_images(img, rotated_img, "Rotate Image")
+
+# rotate about the center of the image
+angle = np.deg2rad(10)
+move_to_center_matrix = np.float32([[1, 0, -img.shape[1] / 2], [0, 1, -img.shape[0] / 2], [0, 0, 1]])
+rotation_matrix = np.float32([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0], [0, 0, 1]])
+move_back_matrix = np.float32([[1, 0, img.shape[1] / 2], [0, 1, img.shape[0] / 2], [0, 0, 1]])
+
+transformation_matrix = move_back_matrix @ rotation_matrix @ move_to_center_matrix 
+# remove the last row 
+transformation_matrix = transformation_matrix[:2, :]
+
+rotated_img = apply_matrix_transformations(img, transformation_matrix)
+show_images(img, rotated_img, "Rotate Image (about the center)")
+
+# and using opencv function
+angle = 10
+rotation_matrix_cv = cv2.getRotationMatrix2D((img.shape[1] / 2, img.shape[0] / 2), angle, 1)
+
+rotated_img_cv = apply_matrix_transformations(img, rotation_matrix_cv)
+show_images(img, rotated_img_cv, "Rotate Image (using OpenCV)")
+
+
 plt.show()
