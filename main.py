@@ -40,4 +40,17 @@ move_matrix = np.float32([[1, 0, 50], [0, 1, 100]])
 moved_img = apply_matrix_transformations(img, move_matrix)
 show_images(img, moved_img, "Move Image")
 
+# mirror the image on the x-axis
+mirror_matrix_x = np.float32([[1, 0, 0], [0, -1, img.shape[0] - 1]])
+
+mirrored_img = apply_matrix_transformations(img, mirror_matrix_x)
+show_images(img, mirrored_img, "Mirror Image (x-axis)")
+
+# mirror the image on the y-axis
+mirror_matrix_y = np.float32([[-1, 0, img.shape[1] - 1], [0, 1, 0]])
+
+mirrored_img = apply_matrix_transformations(img, mirror_matrix_y)
+show_images(img, mirrored_img, "Mirror Image (y-axis)")
+
+
 plt.show()
