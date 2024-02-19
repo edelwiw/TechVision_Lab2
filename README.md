@@ -12,4 +12,5 @@
 ![Image 10](results/Shearing%20Transformation.png)
 ![Image 11](results/Piecewise%20Linear%20Transformation.png)
 ![Image 12](results/Projective%20Transformation.png)
+![Image 12](results/Merged%20Images.png)
 
