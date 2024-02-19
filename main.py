@@ -105,5 +105,10 @@ affine_matrix = cv2.getAffineTransform(src_points, dst_points)
 affine_img = apply_matrix_transformations(img, affine_matrix)
 show_images(img, affine_img, "Affine Transformation")
 
+# shearing transformation
+shearing_matrix = np.float32([[1, 0, 0], [0.2, 1, 0]])
+
+sheared_img = apply_matrix_transformations(img, shearing_matrix)
+show_images(img, sheared_img, "Shearing Transformation")
 
 plt.show()
