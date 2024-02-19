@@ -94,5 +94,16 @@ rotation_matrix_cv = cv2.getRotationMatrix2D((img.shape[1] / 2, img.shape[0] / 2
 rotated_img_cv = apply_matrix_transformations(img, rotation_matrix_cv)
 show_images(img, rotated_img_cv, "Rotate Image (using OpenCV)")
 
+# affine transformation
+# define the points of the source image
+src_points = np.float32([[0, 0], [img.shape[1] - 1, 0], [0, img.shape[0] - 1]])
+# define the points of the transformed image
+dst_points = np.float32([[50, 50], [img.shape[1] - 1, 0], [0, img.shape[0] - 1]])
+
+affine_matrix = cv2.getAffineTransform(src_points, dst_points)
+
+affine_img = apply_matrix_transformations(img, affine_matrix)
+show_images(img, affine_img, "Affine Transformation")
+
 
 plt.show()
