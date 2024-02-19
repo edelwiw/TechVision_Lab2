@@ -138,5 +138,26 @@ projective_matrix = np.float32([[1.1, 0.35, 0], [0.2, 1.1, 0], [0.00075, 0.0005,
 projective_img = apply_perspective_transformations(img, projective_matrix)
 show_images(img, projective_img, "Projective Transformation")
 
+# polynomial transformation
+polynomial_matrix = np.float32([[0, 0], [1, 0], [0, 1], [0.00001, 0], [0.002, 0], [0.001, 0]])
+
+polynomial_img = np.zeros_like(img)
+x, y = np.meshgrid(np.arange(img.shape[1]), np.arange(img.shape[0]))
+
+# calculate the new coordinates
+xnew = np.round(polynomial_matrix[0, 0] + polynomial_matrix[1, 0] * x + polynomial_matrix[2, 0] * y + polynomial_matrix[3, 0] * x**2 + polynomial_matrix[4, 0] * x * y + polynomial_matrix[5, 0] * y**2).astype(np.float32)
+ynew = np.round(polynomial_matrix[0, 1] + polynomial_matrix[1, 1] * x + polynomial_matrix[2, 1] * y + polynomial_matrix[3, 1] * x**2 + polynomial_matrix[4, 1] * x * y + polynomial_matrix[5, 1] * y**2).astype(np.float32)
+
+# calculate mask for valid coordinates
+mask = np.logical_and(np.logical_and(xnew >= 0, xnew < img.shape[1]), np.logical_and(ynew >= 0, ynew < img.shape[0]))
+
+# apply the transformation
+if img.ndim == 2:
+    polynomial_img[ynew[mask].astype(int), xnew[mask].astype(int)] = img[y[mask], x[mask]]
+else:
+    polynomial_img[ynew[mask].astype(int), xnew[mask].astype(int), :] = img[y[mask], x[mask], :]
+
+show_images(img, polynomial_img, "Polynomial Transformation")
+
 
 plt.show()
