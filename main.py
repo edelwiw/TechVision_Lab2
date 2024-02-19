@@ -13,11 +13,13 @@ def show_images(source, transformed, title="Image"):
     plt.subplot(1, 2, 1)
     plt.imshow(img_src_rgb)
     plt.title('Source Image')
+    plt.text(10, 10, f'Resolution: {source.shape[1]}x{source.shape[0]}', color='white', backgroundcolor='black', fontsize=8, ha='left', va='top')
     plt.axis('off')
 
     plt.subplot(1, 2, 2)
     plt.imshow(img_trf_rgb)
     plt.title('Transformed Image')
+    plt.text(10, 10, f'Resolution: {transformed.shape[1]}x{transformed.shape[0]}', color='white', backgroundcolor='black', fontsize=8, ha='left', va='top')
     plt.axis('off')
 
     # adjust space between images
@@ -26,9 +28,11 @@ def show_images(source, transformed, title="Image"):
 
 
 
-def apply_matrix_transformations(img, matrix):
+def apply_matrix_transformations(img, matrix, shape=(0, 0)):
     # apply the matrix to the image
-    return cv2.warpAffine(img, matrix, (img.shape[1], img.shape[0]))
+    if shape == (0, 0):
+        shape = (img.shape[1], img.shape[0])
+    return cv2.warpAffine(img, matrix, shape)
 
 # open the image
 img = cv2.imread("test.jpeg")
@@ -52,5 +56,15 @@ mirror_matrix_y = np.float32([[-1, 0, img.shape[1] - 1], [0, 1, 0]])
 mirrored_img = apply_matrix_transformations(img, mirror_matrix_y)
 show_images(img, mirrored_img, "Mirror Image (y-axis)")
 
+# scale the image (zoom in)
+zoom_matrix = np.float32([[1.5, 0, 0], [0, 1.5, 0]])
+
+zoomed_img = apply_matrix_transformations(img, zoom_matrix, (int(img.shape[1] * 1.5), int(img.shape[0] * 1.5)))
+show_images(img, zoomed_img, "Zoom Image")
+
+# and using opencv function
+zoomed_img_cv = cv2.resize(img, None, fx=1.5, fy=1.5, interpolation=cv2.INTER_CUBIC)
+# None is the size of the output image (None ti use scaling factors), fx and fy are the scale factors
+show_images(img, zoomed_img_cv, "Zoom Image (using OpenCV)")
 
 plt.show()
