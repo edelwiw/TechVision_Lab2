@@ -168,4 +168,33 @@ img_sinusoidal = cv2.remap(img, u.astype(np.float32), v.astype(np.float32), cv2.
 show_images(img, img_sinusoidal, "Sinusoidal Transformation")
 
 
+# merging images
+
+# open the images 
+img_top = cv2.imread("zaebushek_top.png")
+img_bttm = cv2.imread("zaebushek_bttm.png")
+img_source = cv2.imread("zaebushek.png")
+
+assert img_top is not None and img_bttm is not None and img_source is not None, "File could not be read"
+
+# match template
+template_size = 20
+
+template = img_top[-template_size:, :, :]
+
+res = cv2.matchTemplate(img_bttm, template, cv2.TM_CCOEFF)
+min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+
+result_img = np.zeros((img_bttm.shape[0] + img_top.shape[0] - max_loc[1] - template_size, img_top.shape[1], img_top.shape[2]), dtype=np.uint8)
+result_img[:img_top.shape[0], :, :] = img_top
+result_img[img_top.shape[0]:, :, :] = img_bttm[max_loc[1] + template_size:, :, :]
+
+show_images(img_source, result_img, "Merged Images")
+
+# # and using opencv function TODO DONT WORK
+# stitcher = cv2.Stitcher.create(cv2.Stitcher_PANORAMA)
+# status, img_stitched = stitcher.stitch([img_top, img_bttm])
+
+# show_images(img_source, img_stitched, "Merged Images (using OpenCV)")
+
 plt.show()
