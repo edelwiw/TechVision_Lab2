@@ -26,6 +26,9 @@ def show_images(source, transformed, title="Image"):
     plt.subplots_adjust(wspace=0.3, hspace=0.3)
     plt.subplots_adjust(left=0.05, right=0.95)
 
+    # save image
+    plt.savefig(f"results/{title}.png")
+
 
 
 def apply_matrix_transformations(img, matrix, shape=(0, 0)):
