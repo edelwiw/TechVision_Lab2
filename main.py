@@ -215,10 +215,14 @@ result_img[img_top.shape[0]:, :, :] = img_bttm[max_loc[1] + template_size:, :, :
 
 show_images(img_source, result_img, "Merged Images")
 
-# # and using opencv function TODO DONT WORK
-# stitcher = cv2.Stitcher.create(cv2.Stitcher_PANORAMA)
-# status, img_stitched = stitcher.stitch([img_top, img_bttm])
+# stitching images using opencv 
+stitcher = cv2.Stitcher.create(cv2.Stitcher_SCANS)
+status, result_img = stitcher.stitch((img_top, img_bttm))
 
-# show_images(img_source, img_stitched, "Merged Images (using OpenCV)")
+if status == 0:
+    show_images(img_source, result_img, "Stitched Images (using OpenCV)")
+else:
+    print("Images could not be stitched")
+
 
 plt.show()
