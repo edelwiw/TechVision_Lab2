@@ -44,6 +44,29 @@ def apply_perspective_transformations(img, matrix, shape=(0, 0)):
         shape = (img.shape[1], img.shape[0])
     return cv2.warpPerspective(img, matrix, shape)
 
+
+def distortion_correction(img, map_finc):
+    xi, yi = np.meshgrid(np.arange(img.shape[1]), np.arange(img.shape[0]))
+
+    # shift and normalize grid 
+    xmid, ymid = img.shape[1] / 2.0, img.shape[0] / 2.0
+    xi = xi - xmid
+    yi = yi - ymid
+
+    # convert to polar coordinates
+    r, theta = cv2.cartToPolar(xi / xmid, yi / ymid)
+
+    r = map_finc(r)
+
+    # convert back to cartesian coordinates
+    u, v = cv2.polarToCart(r, theta)
+
+    u, v = u * xmid + xmid, v * ymid + ymid
+
+    # remap the image
+    return cv2.remap(img, u.astype(np.float32), v.astype(np.float32), cv2.INTER_LINEAR)
+
+
 # open the image
 img = cv2.imread("test.jpeg")
 assert img is not None, "File could not be read"
@@ -167,33 +190,17 @@ img_sinusoidal = cv2.remap(img, u.astype(np.float32), v.astype(np.float32), cv2.
 
 show_images(img, img_sinusoidal, "Sinusoidal Transformation")
 
-# # distortion correction TODO DONT WORK
-# xi, yi = np.meshgrid(np.arange(img.shape[1]), np.arange(img.shape[0]))
+# distortion correction
 
-# xmid, ymid = img.shape[1] / 2.0, img.shape[0] / 2.0
-# xi = xi - xmid
-# yi = yi - ymid
+# barrel distortion
+img_distortion_corrected = distortion_correction(img, lambda r: r + 0.16 * r ** 3 + 0.1 * r ** 5)
+show_images(img, img_distortion_corrected, "Distortion Correction (barrel)")
 
-# # convert to polar coordinates
-# r, theta = cv2.cartToPolar(xi / xmid, yi / ymid)
+# pincushion distortion
+img_distortion_corrected = distortion_correction(img, lambda r: r - 0.3 * r ** 2) # dont know if it is correct
+show_images(img, img_distortion_corrected, "Distortion Correction (pincushion)")
 
-# F3 = 0.001
-# F5 = 0.002
-
-# r = r + F3 * r ** 3 + F5 * r ** 5
-
-# # convert back to cartesian coordinates
-# xi, yi = cv2.polarToCart(r, theta)
-
-# u, v = u * xmid + xmid, v * ymid + ymid
-
-# # remap the image
-# img_distortion_corrected = cv2.remap(img, u.astype(np.float32), v.astype(np.float32), cv2.INTER_LINEAR)
-
-# show_images(img, img_distortion_corrected, "Distortion Correction")
-
-# merging images
-
+### merging images
 # open the images 
 img_top = cv2.imread("zaebushek_top.png")
 img_bttm = cv2.imread("zaebushek_bttm.png")

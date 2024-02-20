@@ -14,4 +14,6 @@
 ![Image 12](results/Projective%20Transformation.png)
 ![Image 12](results/Merged%20Images.png)
 ![Image 13](results/Stitched%20Images.png)
+![Image 14](results/Distortion%20Correction%20(barrel).png)
+![Image 15](results/Distortion%20Correction%20(pincushion).png)
 
