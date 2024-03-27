@@ -45,23 +45,22 @@ def apply_perspective_transformations(img, matrix, shape=(0, 0)):
     return cv2.warpPerspective(img, matrix, shape)
 
 
-def distortion_correction(img, map_finc):
+def distortion_correction(img, map_func):
     xi, yi = np.meshgrid(np.arange(img.shape[1]), np.arange(img.shape[0]))
 
     # shift and normalize grid 
-    xmid, ymid = img.shape[1] / 2.0, img.shape[0] / 2.0
+    xmid, xmid = img.shape[1] / 2.0, img.shape[0] / 2.0
     xi = xi - xmid
-    yi = yi - ymid
+    yi = yi - xmid
 
     # convert to polar coordinates
-    r, theta = cv2.cartToPolar(xi / xmid, yi / ymid)
-
-    r = map_finc(r)
+    r, theta = cv2.cartToPolar(xi / xmid, yi / xmid)
+    r = map_func(r)
 
     # convert back to cartesian coordinates
     u, v = cv2.polarToCart(r, theta)
 
-    u, v = u * xmid + xmid, v * ymid + ymid
+    u, v = u * xmid + xmid, v * xmid + xmid
 
     # remap the image
     return cv2.remap(img, u.astype(np.float32), v.astype(np.float32), cv2.INTER_LINEAR)
@@ -144,9 +143,9 @@ shearing_matrix = np.float32([[1, 0, 0], [0.2, 1, 0]])
 sheared_img = apply_matrix_transformations(img, shearing_matrix)
 show_images(img, sheared_img, "Shearing Transformation")
 
-# picewise linear transformation
-stratch = 4
-piecewise_linear_matrix = np.float32([[stratch, 0, 0], [0, 1, 0]])
+# piecewise linear transformation
+stretch = 4
+piecewise_linear_matrix = np.float32([[stretch, 0, 0], [0, 1, 0]])
 
 piecewise_linear_img = img.copy()
 piecewise_linear_img[:, img.shape[1] // 2:] = apply_matrix_transformations(img[:, img.shape[1] // 2:], piecewise_linear_matrix)
